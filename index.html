@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script defer src="script.js"></script>
+    <style>
+        * {
+            margin: 0;
+        }
+        
+        #modify {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            bottom: 100px;
+            left: 100px;
+            color: lime;
+            font-size: 1.2rem;
+        }
+        
+        .modifier {
+            display: flex;
+            margin: 10px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        input[type=checkbox] {
+            -webkit-appearance: none;
+            border: 3px solid #2e8b8b;
+            background-color: rgba(0, 217, 255, 0.281);
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            position: relative;
+        }
+        
+        input[type=range] {
+            -webkit-appearance: none;
+            border: 1px solid #2e8b33;
+            background-color: rgba(0, 217, 255, 0.281);
+            height: 1px;
+            padding: 0px;
+        }
+        
+        input:checked {
+            background-color: lime;
+        }
+        
+        input,
+        label {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="modify">
+        <div class="modifier">
+            <label for="scale">Scale</label>
+            <input id="scale" name="scale" type="range" step="1" value="5" min="1" max="10">
+        </div>
+        <div class="modifier">
+            <label for="angle">Angle</label>
+            <input id="angle" name="angle" type="range" step="0.01" value="1" min="-3.14" max="3.14">
+        </div>
+        <div class="modifier">
+            <label for="rotate">Rotate</label>
+            <input id="rotate" name="rotate" type="checkbox" checked>
+        </div>
+        <div class="modifier">
+            <label for="accuracy">Accuracy</label>
+            <input id="accuracy" name="accuracy" type="range" step="0.001" value="3" min="1" max="4">
+        </div>
+        <div class="modifier">
+            <label for="limited">Limit Trail</label>
+            <input id="limited" name="limited" type="checkbox">
+        </div>
+        <div class="modifier">
+            <label id="limitLabel" for="limit">Trail Points</label>
+            <input id="limit" name="limit" type="range" step="10" value="1000" min="100" max="4000">
+        </div>
+        <div class="modifier">
+            <label for="background">Background</label>
+            <input id="background" name="background" type="checkbox" checked>
+        </div>
+        <div class="modifier">
+            <label id="backgroundSizeLabel" for="backgroundSize">Grid Size</label>
+            <input id="backgroundSize" name="backgroundSize" type="range" step="1" value="10" min="6" max="40">
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
