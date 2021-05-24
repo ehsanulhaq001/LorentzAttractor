@@ -12,14 +12,29 @@
             margin: 0;
         }
         
-        #modify {
+        .modify {
             position: absolute;
-            display: flex;
-            flex-direction: column;
-            bottom: 100px;
-            left: 100px;
+            bottom: 10px;
+            right: 10px;
             color: lime;
             font-size: 1.2rem;
+            padding: 5px;
+        }
+        
+        .modify-content {
+            position: absolute;
+            display: none;
+            flex-direction: column;
+            bottom: 10px;
+            right: 10px;
+            color: lime;
+            font-size: 1.2rem;
+            background-color: transparent;
+        }
+        
+        .modify:hover~.modify-content,
+        .modify-content:hover {
+            display: flex;
         }
         
         .modifier {
@@ -60,7 +75,10 @@
 
 <body>
     <canvas id="canvas"></canvas>
-    <div id="modify">
+    <div class="modify">
+        Modify
+    </div>
+    <button class="modify-content">
         <div class="modifier">
             <label for="scale">Scale</label>
             <input id="scale" name="scale" type="range" step="1" value="5" min="1" max="10">
@@ -95,7 +113,7 @@
         </div>
 
 
-    </div>
+    </button>
 
 </body>
 
