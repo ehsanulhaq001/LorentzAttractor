@@ -86,22 +86,31 @@ document
     "input",
     () => (gridSize = document.querySelector("#backgroundSize").value)
   );
+let prevP;
+let prevQ;
 
 function pointAt(x, y, z, t) {
   shiftX = x * Math.cos(t) - z * Math.sin(t) - x;
   shiftZ = z * Math.cos(t) + x * Math.sin(t) - z;
   hue = -3 * shiftZ;
   ctx.beginPath();
-  ctx.arc(
-    cnv.width / 2 + scale * (x + shiftX),
-    cnv.height / 2 + scale * y,
-    0.5,
-    0,
-    2 * Math.PI,
-    1
-  );
+  // ctx.arc(
+  //   cnv.width / 2 + scale * (x + shiftX),
+  //   cnv.height / 2 + scale * y,
+  //   0.5,
+  //   0,
+  //   2 * Math.PI,
+  //   1
+  // );
+  let p = cnv.width / 2 + scale * (x + shiftX);
+  let q = cnv.height / 2 + scale * y;
+  if (prevP == undefined && prevQ == undefined) ctx.moveTo(p, q);
+  else ctx.moveTo(prevP, prevQ);
+  ctx.lineTo(p, q);
   ctx.strokeStyle = `hsl(${hue},100%, 50%)`;
   ctx.stroke();
+  prevP = p;
+  prevQ = q;
 }
 
 function setBackground(n) {
@@ -130,6 +139,7 @@ function setBackground(n) {
 function animate() {
   requestAnimationFrame(animate);
   ctx.clearRect(0, 0, cnv.width, cnv.height);
+  background && setBackground(gridSize);
   points.push({ x: x, y: y, z: z });
   let dx = a * (y - x) * dt;
   let dy = (x * (b - z) - y) * dt;
@@ -141,12 +151,12 @@ function animate() {
   while (limited && points.length > limit) {
     points.shift();
   }
+  prevP = undefined;
+  prevQ = undefined;
   points.forEach((point) => {
     pointAt(point.x, point.y, point.z, t);
   });
   t = t - rotate * 0.01;
-  background && setBackground(gridSize);
 }
 
 requestAnimationFrame(animate);
-// setInterval(animate, 1000 / 500)
