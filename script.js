@@ -21,8 +21,8 @@ const a = 10;
 const b = 28;
 const c = 8 / 3;
 let scale = 5;
-let limited = 0;
-let limit = 1000;
+let limited = 1;
+let limit = 300;
 let rotate = 1;
 let t = 0;
 let dt = 0.01;
@@ -39,7 +39,7 @@ let prevQ;
 let xyz = new Array(n);
 
 document.querySelector("#limitLabel").style.display = "none";
-document.querySelector("#limit").style.display = "none";
+document.querySelector("#limit").style.display = "block";
 document.querySelector("#nop").addEventListener("input", () => {
   n = parseInt(document.querySelector("#nop").value);
   onNchange();
