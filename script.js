@@ -9,9 +9,14 @@ window.addEventListener("resize", () => {
   cnv.height = window.innerHeight;
 });
 
-let x = 0.1;
-let y = 0;
-let z = 0;
+function onNchange() {
+  curves = new Array(n);
+  for (let i = 0; i < curves.length; i++) {
+    curves[i] = new Array();
+  }
+  xyz = new Array(n);
+}
+
 const a = 10;
 const b = 28;
 const c = 8 / 3;
@@ -23,11 +28,22 @@ let t = 0;
 let dt = 0.01;
 let background = 1;
 let gridSize = 10;
-let points = [];
+let n = 6;
+let curves = new Array(n);
+for (let i = 0; i < curves.length; i++) {
+  curves[i] = new Array();
+}
 let hue = 0;
+let prevP;
+let prevQ;
+let xyz = new Array(n);
 
 document.querySelector("#limitLabel").style.display = "none";
 document.querySelector("#limit").style.display = "none";
+document.querySelector("#nop").addEventListener("input", () => {
+  n = parseInt(document.querySelector("#nop").value);
+  onNchange();
+});
 document
   .querySelector("#scale")
   .addEventListener(
@@ -86,31 +102,22 @@ document
     "input",
     () => (gridSize = document.querySelector("#backgroundSize").value)
   );
-let prevP;
-let prevQ;
 
 function pointAt(x, y, z, t) {
   shiftX = x * Math.cos(t) - z * Math.sin(t) - x;
   shiftZ = z * Math.cos(t) + x * Math.sin(t) - z;
   hue = -3 * shiftZ;
-  ctx.beginPath();
-  // ctx.arc(
-  //   cnv.width / 2 + scale * (x + shiftX),
-  //   cnv.height / 2 + scale * y,
-  //   0.5,
-  //   0,
-  //   2 * Math.PI,
-  //   1
-  // );
   let p = cnv.width / 2 + scale * (x + shiftX);
   let q = cnv.height / 2 + scale * y;
-  if (prevP == undefined && prevQ == undefined) ctx.moveTo(p, q);
-  else ctx.moveTo(prevP, prevQ);
+
+  ctx.beginPath();
+  ctx.moveTo(prevP, prevQ);
   ctx.lineTo(p, q);
   ctx.strokeStyle = `hsl(${hue},100%, 50%)`;
   ctx.stroke();
   prevP = p;
   prevQ = q;
+  return { p, q };
 }
 
 function setBackground(n) {
@@ -137,26 +144,46 @@ function setBackground(n) {
 }
 
 function animate() {
-  requestAnimationFrame(animate);
   ctx.clearRect(0, 0, cnv.width, cnv.height);
   background && setBackground(gridSize);
-  points.push({ x: x, y: y, z: z });
-  let dx = a * (y - x) * dt;
-  let dy = (x * (b - z) - y) * dt;
-  let dz = (x * y - c * z) * dt;
-  x = x + dx;
-  y = y + dy;
-  z = z + dz;
-  points.push({ x, y, z });
-  while (limited && points.length > limit) {
-    points.shift();
-  }
-  prevP = undefined;
-  prevQ = undefined;
-  points.forEach((point) => {
-    pointAt(point.x, point.y, point.z, t);
-  });
-  t = t - rotate * 0.01;
-}
 
+  for (let i = 0; i < n; i++) {
+    if (curves[i].length == 0) {
+      xyz[i] = {
+        x: Math.random() * 5 + 0.1,
+        y: Math.random() * 5 + 0.1,
+        z: Math.random() * 5 + 0.1,
+      };
+    }
+    let x = xyz[i].x;
+    let y = xyz[i].y;
+    let z = xyz[i].z;
+    let dx = a * (y - x) * dt;
+    let dy = (x * (b - z) - y) * dt;
+    let dz = (x * y - c * z) * dt;
+    xyz[i].x = x + dx;
+    xyz[i].y = y + dy;
+    xyz[i].z = z + dz;
+    x = xyz[i].x;
+    y = xyz[i].y;
+    z = xyz[i].z;
+    curves[i].push({ x, y, z });
+    while (limited && curves[i].length > limit) {
+      curves[i].shift();
+    }
+    prevP = undefined;
+    prevQ = undefined;
+    let u;
+    curves[i].forEach((point) => {
+      u = pointAt(point.x, point.y, point.z, t);
+    });
+    ctx.beginPath();
+    ctx.arc(u.p, u.q, 2, 0, 2 * Math.PI, 1);
+    ctx.fillStyle = "white";
+    ctx.fill();
+  }
+
+  t = t - rotate * 0.01;
+  requestAnimationFrame(animate);
+}
 requestAnimationFrame(animate);
